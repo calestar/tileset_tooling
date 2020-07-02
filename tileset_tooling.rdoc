@@ -1,0 +1,5 @@
+= tileset_tooling
+
+Generate this with
+    tileset_tooling rdoc
+After you have described your command line interface
