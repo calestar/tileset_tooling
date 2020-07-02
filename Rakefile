@@ -4,6 +4,7 @@ require 'rubygems/package_task'
 require 'rdoc/task'
 require 'cucumber'
 require 'cucumber/rake/task'
+require 'rubocop/rake_task'
 
 Rake::RDocTask.new do |rd|
   rd.main = "README.rdoc"
@@ -42,6 +43,18 @@ require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs << "test"
   t.test_files = FileList['test/*_test.rb']
+end
+
+desc 'Run RuboCop'
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.patterns = [
+    'bin/tileset_tooling',
+    'features/**/*.rb',
+    'lib/**/*.rb',
+    'test/**/*.rb',
+  ]
+  # don't abort rake on failure
+  task.fail_on_error = false
 end
 
 task :default => [:test,:features]
