@@ -3,11 +3,11 @@ require File.join([File.dirname(__FILE__),'lib','tileset_tooling','version.rb'])
 spec = Gem::Specification.new do |s|
   s.name = 'tileset_tooling'
   s.version = TilesetTooling::VERSION
-  s.author = 'Your Name Here'
-  s.email = 'your@email.address.com'
-  s.homepage = 'http://your.website.com'
+  s.author = 'Jean-Sebastien Gelinas'
+  s.email = 'calestar@gmail.com'
+  s.homepage = 'https://github.com/calestar/tileset_tooling'
   s.platform = Gem::Platform::RUBY
-  s.summary = 'A description of your project'
+  s.summary = 'Bits of tooling I use for working with tilesets'
   s.files = `git ls-files`.split("
 ")
   s.require_paths << 'lib'
@@ -18,5 +18,6 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('rake', '>= 12.3.3')
   s.add_development_dependency('rdoc')
   s.add_development_dependency('aruba')
+  s.add_development_dependency('test-unit')
   s.add_runtime_dependency('gli','2.14.0')
 end

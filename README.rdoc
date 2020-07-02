@@ -1,6 +1,3 @@
 = tileset_tooling
 
-Describe your project here
-
-:include:tileset_tooling.rdoc
-
+Bits of tooling I use for working with tilesets
