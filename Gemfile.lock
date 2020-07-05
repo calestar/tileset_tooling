@@ -3,6 +3,7 @@ PATH
   specs:
     tileset_tooling (0.0.1)
       gli (= 2.19.2)
+      mini_magick
       semantic_logger
 
 GEM
@@ -42,6 +43,7 @@ GEM
     ffi (1.9.25)
     gherkin (5.1.0)
     gli (2.19.2)
+    mini_magick (4.10.1)
     multi_json (1.13.1)
     multi_test (0.1.2)
     parallel (1.19.2)
