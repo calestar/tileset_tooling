@@ -1,30 +1,40 @@
+# Copyright (c) 2020 Jean-Sebastien Gelinas, see LICENSE.txt
 # frozen_string_literal: true
 
 require 'gli'
+require 'semantic_logger'
 
 require 'tileset_tooling/version.rb'
+require 'tileset_tooling/commands/insert_bleed.rb'
 
-module TilesetTooling
-  # Core application for the project; sets up the GLI configuration and such
-  class App
-    extend GLI::App
+# Core module for the project
+module ::TilesetTooling
+end
 
-    program_desc 'Describe your application here'
+# Core application for the project; sets up the GLI configuration and such
+class ::TilesetTooling::App
+  extend ::GLI::App
 
-    version TilesetTooling::VERSION
+  program_desc 'Bits of tooling I use for working with tilesets'
 
-    subcommand_option_handling :normal
-    arguments :strict
+  version ::TilesetTooling::VERSION
 
-    pre do
-      true
-    end
+  subcommand_option_handling :normal
+  arguments :strict
 
-    post do
-    end
+  pre do
+    # Set the global default log level and add appender
+    ::SemanticLogger.sync!
+    ::SemanticLogger.default_level = :trace
+    ::SemanticLogger.add_appender(io: ::STDOUT, formatter: :color)
 
-    on_error do
-      true
-    end
+    true
+  end
+
+  post do
+  end
+
+  on_error do
+    true
   end
 end

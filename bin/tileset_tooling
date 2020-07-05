@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
+# Copyright (c) 2020 Jean-Sebastien Gelinas, see LICENSE.txt
 # frozen_string_literal: true
 
 require 'tileset_tooling'
 
-exit TilesetTooling::App.run(ARGV)
+exit(::TilesetTooling::App.run(::ARGV))

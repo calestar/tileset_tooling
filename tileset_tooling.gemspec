@@ -9,6 +9,7 @@ Gem::Specification.new do |s|
   s.author = 'Jean-Sebastien Gelinas'
   s.email = 'calestar@gmail.com'
   s.homepage = 'https://github.com/calestar/tileset_tooling'
+  s.license = 'MIT'
   s.platform = Gem::Platform::RUBY
   s.summary = 'Bits of tooling I use for working with tilesets'
   s.files = `git ls-files`.split('

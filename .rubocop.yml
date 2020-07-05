@@ -1,0 +1,22 @@
+AllCops:
+    EnabledByDefault: true
+    Include:
+        - 'bin/tileset_tooling'
+        - 'features/**/*.rb'
+        - 'lib/**/*.rb'
+        - 'test/**/*.rb'
+
+Metrics/MethodLength:
+    Max: 50
+
+Style/MethodCallWithArgsParentheses:
+    IgnoredMethods:
+        - require
+        - assert
+
+Style/Copyright:
+    Notice: '# Copyright \(c\) 2020 Jean-Sebastien Gelinas, see LICENSE\.txt'
+    AutocorrectNotice: '# Copyright (c) 2020 Jean-Sebastien Gelinas, see LICENSE.txt'
+
+Style/ClassAndModuleChildren:
+    EnforcedStyle: compact

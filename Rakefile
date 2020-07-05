@@ -47,14 +47,7 @@ end
 
 desc 'Run RuboCop'
 RuboCop::RakeTask.new(:rubocop) do |task|
-  task.patterns = [
-    'bin/tileset_tooling',
-    'features/**/*.rb',
-    'lib/**/*.rb',
-    'test/**/*.rb',
-  ]
-  # don't abort rake on failure
   task.fail_on_error = false
 end
 
-task :default => [:test,:features]
+task :default => [:rubocop, :test,:features]
