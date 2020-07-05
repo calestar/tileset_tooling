@@ -10,4 +10,7 @@
           "useBundler": true // enable reek via bundler
         }
     },
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": true
 }
