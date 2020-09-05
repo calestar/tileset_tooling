@@ -4,8 +4,8 @@
 require 'gli'
 require 'semantic_logger'
 
-require 'tileset_tooling/version.rb'
-require 'tileset_tooling/commands/insert_bleed.rb'
+require 'tileset_tooling/version'
+require 'tileset_tooling/commands'
 
 # Core module for the project
 module ::TilesetTooling
@@ -34,7 +34,21 @@ class ::TilesetTooling::App
   post do
   end
 
-  on_error do
+  on_error do |error|
+    puts(error)
+    puts(error.backtrace)
     true
+  end
+
+  desc 'Commands relating to bleed around tiles'
+  command :bleed do |bleed_command|
+    bleed_command.arg(:input_file)
+    bleed_command.command(:insert) do |insert_command|
+      insert_command.action do |_, options, args|
+        command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
+        command.unpack!
+        command.run
+      end
+    end
   end
 end

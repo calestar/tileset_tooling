@@ -1,3 +1,8 @@
 = tileset_tooling
 
 Bits of tooling I use for working with tilesets
+
+
+== Development environment
+
+    sudo apt-get install imagemagick

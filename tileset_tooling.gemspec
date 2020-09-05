@@ -24,7 +24,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rdoc')
   s.add_development_dependency('rubocop')
   s.add_development_dependency('test-unit')
+  s.add_runtime_dependency('dry-struct')
   s.add_runtime_dependency('gli', '2.19.2')
-  s.add_runtime_dependency('semantic_logger')
+  s.add_runtime_dependency('highline')
   s.add_runtime_dependency('mini_magick')
+  s.add_runtime_dependency('semantic_logger')
 end
