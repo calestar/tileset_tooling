@@ -3,9 +3,10 @@
 
 require 'test_helper'
 
-class ::DefaultTest < ::Test::Unit::TestCase
+class ::TestInsertBleed < ::Test::Unit::TestCase
   def test_margin_required
-    command = ::TilesetTooling::Commands::InsertBleed.new({}, ["#{__dir__}/data/simple_no_margin.png"])
+    input, = get_png_data('simple_no_margin.png')
+    command = ::TilesetTooling::Commands::InsertBleed.new({}, [input])
     command.expects(:find_specs).returns([16, 16, 0, 0, 0])
     command.unpack!
 
@@ -15,9 +16,8 @@ class ::DefaultTest < ::Test::Unit::TestCase
   end
 
   def test_simple_file
-    input = "#{__dir__}/data/simple_with_margin.png"
-    expected = "#{__dir__}/data/expected/simple_with_margin.png"
-    output = "#{__dir__}/data/output.png"
+    input, expected = get_png_data('simple_with_margin.png')
+    output = output_file_path
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
