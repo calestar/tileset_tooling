@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.bindir = 'bin'
   s.executables << 'tileset_tooling'
   s.add_development_dependency('aruba')
+  s.add_development_dependency('mocha')
   s.add_development_dependency('rake', '>= 12.3.3')
   s.add_development_dependency('rdoc')
   s.add_development_dependency('rubocop')

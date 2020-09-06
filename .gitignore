@@ -1,4 +1,5 @@
 vendor/
 .bundle
+test/data/output.png
 
 results.html

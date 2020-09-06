@@ -43,6 +43,7 @@ require 'rake/testtask'
 Rake::TestTask.new do |t|
   t.libs << "test"
   t.test_files = FileList['test/*_test.rb']
+  t.warning = false
 end
 
 desc 'Run RuboCop'
@@ -50,4 +51,4 @@ RuboCop::RakeTask.new(:rubocop) do |task|
   task.fail_on_error = false
 end
 
-task :default => [:rubocop, :test,:features]
+task :default => [:rubocop, :test, :features]
