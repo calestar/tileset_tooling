@@ -47,6 +47,8 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
   private
 
   def result_path
+    return @options[:output] if @options[:output]
+
     file_name = ::File.basename(@image_path, '.*')
     extension = ::File.extname(@image_path)
     directory = ::File.dirname(@image_path)
@@ -54,22 +56,36 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
     "#{directory}/#{file_name}_result#{extension}"
   end
 
+  def find_specs
+    tile_height =
+      @cli.ask('Tile height?  ', ::Integer) do |q|
+        q.default = 0
+        q.in = 1..256
+      end
+    tile_width =
+      @cli.ask('Tile width?  ', ::Integer) do |q|
+        q.default = 0
+        q.in = 1..256
+      end
+    margin = @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 }
+    offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
+    offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
+
+    [tile_height, tile_width, margin, offset_top, offset_left]
+  end
+
   # Asks for information about the image and build a tileset
   def gather_image_information
+    tile_height, tile_width, margin, offset_top, offset_left = find_specs
+
     ::TilesetTooling::Data::TileSet.new(
       image: ::MiniMagick::Image.open(@image_path),
       original_image_path: @image_path,
-      tile_height: @cli.ask('Tile height?  ', ::Integer) do |q|
-        q.default = 0
-        q.in = 1..256
-      end,
-      tile_width: @cli.ask('Tile width?  ', ::Integer) do |q|
-        q.default = 0
-        q.in = 1..256
-      end,
-      margin: @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 },
-      offset_top: @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 },
-      offset_left: @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
+      tile_height: tile_height,
+      tile_width: tile_width,
+      margin: margin,
+      offset_top: offset_top,
+      offset_left: offset_left
     )
   end
 

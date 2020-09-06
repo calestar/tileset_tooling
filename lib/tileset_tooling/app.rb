@@ -44,6 +44,7 @@ class ::TilesetTooling::App
   command :bleed do |bleed_command|
     bleed_command.arg(:input_file)
     bleed_command.command(:insert) do |insert_command|
+      insert_command.flag([:output], default_value: nil)
       insert_command.action do |_, options, args|
         command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
         command.unpack!
