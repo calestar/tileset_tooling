@@ -12,7 +12,8 @@ Then(/^generated file should be the same as data result "([^"]*)"/) do |data_pat
   expect(::File.exist?(expected_output_path)).to be true
   expect(::File.exist?(output_path)).to be true
 
-  file_identical = ::FileUtils.identical?(expected_output_path, output_path)
+  expected_signature = image_signature(expected_output_path)
+  output_signature = image_signature(output_path)
 
-  expect(file_identical).to be true
+  expect(expected_signature).to eq output_signature
 end

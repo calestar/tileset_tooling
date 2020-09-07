@@ -26,8 +26,8 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     command.run
     assert ::File.exist?(expected)
     assert ::File.exist?(output)
-    output_signature = image_signature(output)
-    expected_signature = image_signature(expected)
+    output_signature = ::TilesetTooling::Utils.image_signature(output)
+    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
     assert_equal(expected_signature, output_signature)
   end
 end

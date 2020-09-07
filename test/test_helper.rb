@@ -6,10 +6,10 @@ require 'mocha/test_unit'
 
 require 'tileset_tooling/app'
 
-# Lets get some output !
-::SemanticLogger.sync!
-::SemanticLogger.default_level = :trace
-::SemanticLogger.add_appender(io: ::STDOUT, formatter: :color)
+# In case we need debugging, uncomment the following
+# ::SemanticLogger.sync!
+# ::SemanticLogger.default_level = :trace
+# ::SemanticLogger.add_appender(io: ::STDOUT, formatter: :color)
 
 def get_png_data(name)
   input = "#{__dir__}/data/#{name}"
