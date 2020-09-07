@@ -26,6 +26,8 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     command.run
     assert ::File.exist?(expected)
     assert ::File.exist?(output)
-    assert ::FileUtils.identical?(expected, output)
+    output_signature = image_signature(output)
+    expected_signature = image_signature(expected)
+    assert_equal(expected_signature, output_signature)
   end
 end

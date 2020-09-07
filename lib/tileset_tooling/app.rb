@@ -6,6 +6,7 @@ require 'semantic_logger'
 
 require 'tileset_tooling/version'
 require 'tileset_tooling/commands'
+require 'tileset_tooling/utils'
 
 # Core module for the project
 module ::TilesetTooling
