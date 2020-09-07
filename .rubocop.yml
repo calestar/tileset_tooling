@@ -1,0 +1,63 @@
+inherit_mode:
+    merge:
+      - AllowedNames
+
+AllCops:
+    EnabledByDefault: true
+    Include:
+        - 'bin/tileset_tooling'
+        - 'features/**/*.rb'
+        - 'lib/**/*.rb'
+        - 'test/**/*.rb'
+
+Metrics/AbcSize:
+    Max: 50
+
+Metrics/CyclomaticComplexity:
+    Max: 8
+
+Layout/LineLength:
+    Max: 150
+
+Metrics/MethodLength:
+    Max: 50
+
+Metrics/ParameterLists:
+    Max: 7
+
+Metrics/PerceivedComplexity:
+    Max: 8
+
+Naming/MethodParameterName:
+    AllowedNames:
+        - x1
+        - y1
+        - x2
+        - y2
+
+Style/DisableCopsWithinSourceCodeDirective:
+    Enabled: False
+
+Style/Documentation:
+    Exclude:
+        - 'features/**/*'
+        - 'test/**/*'
+
+Style/DocumentationMethod:
+    Exclude:
+        - 'features/**/*'
+        - 'test/**/*'
+
+Style/MethodCallWithArgsParentheses:
+    Exclude:
+        - 'features/**/*'
+        - 'test/**/*'
+    IgnoredMethods:
+        - require
+
+Style/Copyright:
+    Notice: '# Copyright \(c\) 2020 Jean-Sebastien Gelinas, see LICENSE\.txt'
+    AutocorrectNotice: '# Copyright (c) 2020 Jean-Sebastien Gelinas, see LICENSE.txt'
+
+Style/ClassAndModuleChildren:
+    EnforcedStyle: compact

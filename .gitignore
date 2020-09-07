@@ -1,4 +1,6 @@
 vendor/
 .bundle
+test/data/tmp_output.png
+test/data/simple_with_margin_result.png
 
 results.html

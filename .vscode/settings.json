@@ -1,0 +1,16 @@
+{
+    "ruby.format": "rubocop",
+    "ruby.intellisense": "rubyLocate",
+    "ruby.codeCompletion": "rcodetools",
+    "ruby.lint": {
+        "rubocop": {
+          "useBundler": true // enable rubocop via bundler
+        },
+        "reek": {
+          "useBundler": true // enable reek via bundler
+        }
+    },
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.detectIndentation": true
+}
