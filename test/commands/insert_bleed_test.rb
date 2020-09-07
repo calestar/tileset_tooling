@@ -24,6 +24,8 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     command.expects(:find_specs).returns([16, 16, 1, 0, 0])
     command.unpack!
     command.run
+    assert ::File.exist?(expected)
+    assert ::File.exist?(output)
     assert ::FileUtils.identical?(expected, output)
   end
 end
