@@ -28,7 +28,8 @@ jobs:
       with:
         ruby-version: 2.6.3
     - name: Install dependencies
-      run: apt-get install imagemagick
-      run: bundle install
+      run: |
+        apt-get install imagemagick
+        bundle install
     - name: Run tests
       run: bundle exec rake
