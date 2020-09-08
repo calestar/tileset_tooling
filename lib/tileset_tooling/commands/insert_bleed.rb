@@ -58,30 +58,46 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
     "#{directory}/#{file_name}_result#{extension}"
   end
 
-  def find_specs
-    specs_file = ::TilesetTooling::Utils.image_spec_file_path(@image_path)
-    if ::File.exist?(specs_file)
-      @logger.info("Extracting specs from '#{specs_file}'")
-      specs = ::YAML.load_file(specs_file)
+  def ask_specs
+    tile_height =
+      @cli.ask('Tile height?  ', ::Integer) do |q|
+        q.default = 0
+        q.in = 1..256
+      end
+    tile_width =
+      @cli.ask('Tile width?  ', ::Integer) do |q|
+        q.default = 0
+        q.in = 1..256
+      end
+    margin = @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 }
+    offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
+    offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
+
+    [tile_height, tile_width, margin, offset_top, offset_left]
+  end
+
+  def load_specs_from_file(file_path)
+    @logger.info("Extracting specs from '#{file_path}'")
+    specs = ::YAML.load_file(file_path)
+
+    begin
       tile_height = specs['specs']['details']['tile_height']
       tile_width = specs['specs']['details']['tile_width']
       margin = specs['specs']['details']['margin']
       offset_top = specs['specs']['details']['offset_top']
       offset_left = specs['specs']['details']['offset_left']
+    rescue ::NoMethodError
+      raise(::StandardError, 'Invalid specs file')
+    end
+    [tile_height, tile_width, margin, offset_top, offset_left]
+  end
+
+  def find_specs
+    specs_file = ::TilesetTooling::Utils.image_spec_file_path(@image_path)
+    if !@options[:'skip-specs'] && ::File.exist?(specs_file)
+      tile_height, tile_width, margin, offset_top, offset_left = load_specs_from_file(specs_file)
     else
-      tile_height =
-        @cli.ask('Tile height?  ', ::Integer) do |q|
-          q.default = 0
-          q.in = 1..256
-        end
-      tile_width =
-        @cli.ask('Tile width?  ', ::Integer) do |q|
-          q.default = 0
-          q.in = 1..256
-        end
-      margin = @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 }
-      offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
-      offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
+      tile_height, tile_width, margin, offset_top, offset_left = ask_specs
     end
     [tile_height, tile_width, margin, offset_top, offset_left]
   end

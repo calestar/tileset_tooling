@@ -40,3 +40,17 @@ Feature: App inserts bleed correctly
     When I insert bleed to test data "simple_with_specs.png"
     Then the exit status should be 0
     Then generated file should be the same as data result "simple_with_specs.png"
+
+  Scenario: Insert bleed with bad specs
+    When I insert bleed to test data "simple_with_bad_specs.png"
+    Then the exit status should be 1
+
+  Scenario: Insert bleed with skipped specs
+    When I insert bleed to test data "simple_with_bad_specs.png" and skip specs loading
+    Then I type "16"
+    Then I type "16"
+    Then I type "1"
+    Then I type "0"
+    Then I type "0"
+    Then the exit status should be 0
+    Then generated file should be the same as data result "simple_with_bad_specs.png"
