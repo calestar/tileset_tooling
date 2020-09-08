@@ -3,6 +3,8 @@
 
 require 'tileset_tooling/data'
 
+require 'yaml'
+
 # Command used to insert bleed around tiles
 class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Command
   # Default initializer
@@ -57,20 +59,30 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
   end
 
   def find_specs
-    tile_height =
-      @cli.ask('Tile height?  ', ::Integer) do |q|
-        q.default = 0
-        q.in = 1..256
-      end
-    tile_width =
-      @cli.ask('Tile width?  ', ::Integer) do |q|
-        q.default = 0
-        q.in = 1..256
-      end
-    margin = @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 }
-    offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
-    offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
-
+    specs_file = ::TilesetTooling::Utils.image_spec_file_path(@image_path)
+    if ::File.exist?(specs_file)
+      @logger.info("Extracting specs from '#{specs_file}'")
+      specs = ::YAML.load_file(specs_file)
+      tile_height = specs['specs']['details']['tile_height']
+      tile_width = specs['specs']['details']['tile_width']
+      margin = specs['specs']['details']['margin']
+      offset_top = specs['specs']['details']['offset_top']
+      offset_left = specs['specs']['details']['offset_left']
+    else
+      tile_height =
+        @cli.ask('Tile height?  ', ::Integer) do |q|
+          q.default = 0
+          q.in = 1..256
+        end
+      tile_width =
+        @cli.ask('Tile width?  ', ::Integer) do |q|
+          q.default = 0
+          q.in = 1..256
+        end
+      margin = @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 }
+      offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
+      offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
+    end
     [tile_height, tile_width, margin, offset_top, offset_left]
   end
 

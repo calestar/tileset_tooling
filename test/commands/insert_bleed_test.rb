@@ -30,4 +30,19 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     expected_signature = ::TilesetTooling::Utils.image_signature(expected)
     assert_equal(expected_signature, output_signature)
   end
+
+  def test_simple_file_with_specs
+    input, expected = get_png_data('simple_with_specs.png')
+    output = output_file_path
+    options = { output: output }
+    args = [input]
+    command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
+    command.unpack!
+    command.run
+    assert ::File.exist?(expected)
+    assert ::File.exist?(output)
+    output_signature = ::TilesetTooling::Utils.image_signature(output)
+    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
+    assert_equal(expected_signature, output_signature)
+  end
 end

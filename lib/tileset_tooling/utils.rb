@@ -15,4 +15,12 @@ module ::TilesetTooling::Utils
       identity << image_path
     end
   end
+
+  # Gets the path to the spec file that should go with the given image
+  def image_spec_file_path(image_path)
+    file_name = ::File.basename(image_path, '.*')
+    directory = ::File.dirname(image_path)
+
+    "#{directory}/#{file_name}.specs"
+  end
 end
