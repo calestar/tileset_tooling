@@ -7,11 +7,6 @@ require 'yaml'
 
 # Command used to insert bleed around tiles
 class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Command
-  # Default initializer
-  def initialize(options, args)
-    super(options, args)
-  end
-
   # Validates arguments/options and unpacks them
   def unpack!
     raise(::StandardError, 'Missing argument') unless @args.count == 1

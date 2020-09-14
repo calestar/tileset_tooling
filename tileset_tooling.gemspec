@@ -19,15 +19,15 @@ Gem::Specification.new do |s|
   s.rdoc_options << '--title' << 'tileset_tooling' << '--main' << 'README.rdoc' << '-ri'
   s.bindir = 'bin'
   s.executables << 'tileset_tooling'
-  s.add_development_dependency('aruba')
-  s.add_development_dependency('mocha')
-  s.add_development_dependency('rake', '>= 12.3.3')
-  s.add_development_dependency('rdoc')
-  s.add_development_dependency('rubocop')
-  s.add_development_dependency('test-unit')
-  s.add_runtime_dependency('dry-struct')
-  s.add_runtime_dependency('gli', '2.19.2')
-  s.add_runtime_dependency('highline')
-  s.add_runtime_dependency('mini_magick')
-  s.add_runtime_dependency('semantic_logger')
+  s.add_development_dependency('aruba', '~> 1.0', '>= 1.0.3')
+  s.add_development_dependency('mocha', '~> 1.11', '>= 1.11.2')
+  s.add_development_dependency('rake', '~> 12.3', '>= 12.3.3')
+  s.add_development_dependency('rdoc', '~> 6.2', '>= 6.2.1')
+  s.add_development_dependency('rubocop', '~> 0.90', '>= 0.90.0')
+  s.add_development_dependency('test-unit', '~> 3.3', '>= 3.3.6')
+  s.add_runtime_dependency('dry-struct', '~> 1.3', '>= 1.3.0')
+  s.add_runtime_dependency('gli', '~> 2.19', '2.19.2')
+  s.add_runtime_dependency('highline', '~> 2.0', '>= 2.0.3')
+  s.add_runtime_dependency('mini_magick', '~> 4.10', '>= 4.10.1')
+  s.add_runtime_dependency('semantic_logger', '~> 4.7', '>= 4.7.2')
 end
