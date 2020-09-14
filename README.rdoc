@@ -36,6 +36,17 @@ This file contains all the documentation for all the commands. It is automatical
 
     bundle exec tileset_tooling _doc
 
+=== Validating gem before pushing
+Easiest way to validate the gem is to create a RVM virtual environment. In order to do so, simply run the following:
+
+    $ gem build tileset_tooling.gemspec
+    $ rvm gemset create project1
+    $ rvm gemset use project1
+    $ gem install tileset_tooling-0.0.1.gem
+    $ tileset_tooling  help
+    $ rvm gemset use default
+    $ rvm gemset delete project1
+
 == Credits
 === Author
 Jean-Sebastien Gelinas (aka {calestar}[https://github.com/calestar]).
