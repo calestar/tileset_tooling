@@ -5,4 +5,4 @@ test/data/tmp_output.png
 results.html
 test/data/*_result.png
 
-tileset_tooling-0.0.1.gem
+tileset_tooling-*.gem

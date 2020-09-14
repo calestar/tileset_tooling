@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.homepage = 'https://github.com/calestar/tileset_tooling'
   s.license = 'MIT'
   s.platform = Gem::Platform::RUBY
+  s.required_ruby_version = '>= 2.6.3'
   s.summary = 'Bits of tooling I use for working with tilesets'
   s.files = `git ls-files`.split('
 ')
