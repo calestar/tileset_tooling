@@ -27,7 +27,7 @@ class ::TilesetTooling::App
     # Set the global default log level and add appender
     ::SemanticLogger.sync!
     ::SemanticLogger.default_level = :trace
-    ::SemanticLogger.add_appender(io: ::STDOUT, formatter: :color)
+    ::SemanticLogger.add_appender(io: $stdout, formatter: :color)
 
     true
   end
