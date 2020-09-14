@@ -1,6 +1,7 @@
 = tileset_tooling
 
 {<img src="https://github.com/calestar/tileset_tooling/workflows/Ruby/badge.svg?branch=master" alt="Build Status" />}[https://github.com/calestar/tileset_tooling/actions?query=workflow%3ARuby]
+{<img src="https://ruby-gem-downloads-badge.herokuapp.com/tileset_tooling?metric=true" alt="Build Status" />}[https://rubygems.org/gems/tileset_tooling]
 
 Bits of tooling I use for working with tilesets.
 
