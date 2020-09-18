@@ -5,14 +5,19 @@ require 'test_helper'
 
 class ::TestInsertBleed < ::Test::Unit::TestCase
   def test_margin_required
-    input, = get_png_data('simple_no_margin.png')
-    command = ::TilesetTooling::Commands::InsertBleed.new({}, [input])
+    input, expected = get_png_data('simple_no_margin.png')
+    output = output_file_path
+    options = { output: output }
+    args = [input]
+    command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
     command.expects(:ask_specs).returns([16, 16, 0, 0, 0])
     command.unpack!
-
-    assert_raise ::StandardError, 'Current implementation needs an existing margin' do
-      command.run
-    end
+    command.run
+    assert ::File.exist?(expected)
+    assert ::File.exist?(output)
+    output_signature = ::TilesetTooling::Utils.image_signature(output)
+    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
+    assert_equal(expected_signature, output_signature)
   end
 
   def test_simple_file

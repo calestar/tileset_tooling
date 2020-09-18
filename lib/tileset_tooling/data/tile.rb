@@ -13,6 +13,9 @@ class ::TilesetTooling::Data::Tile < ::Dry::Struct
   attribute :margin_bottom, ::TilesetTooling::Data::Types::Integer
   attribute :margin_right, ::TilesetTooling::Data::Types::Integer
 
+  attribute :row_index, ::TilesetTooling::Data::Types::Integer
+  attribute :column_index, ::TilesetTooling::Data::Types::Integer
+
   # Helper to print the information of the tile
   def to_s
     "#{top},#{left} [#{margin_top},#{margin_left},#{margin_bottom},#{margin_right}]"

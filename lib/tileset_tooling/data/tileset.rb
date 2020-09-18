@@ -54,6 +54,16 @@ Image '#{original_image_path}'
     image.width
   end
 
+  # Gets the number of tiles per row
+  def nb_tiles_per_row
+    rows[0].tiles.length
+  end
+
+  # Gets the number of tiles per column
+  def nb_tiles_per_column
+    rows.length
+  end
+
   private
 
   # Computes the tiles and returns them
@@ -62,11 +72,13 @@ Image '#{original_image_path}'
 
     @rows = []
     top = offset_top
+    row_index = 0
     loop do
       left = offset_left
       tiles = []
       margin_top = top.positive? ? margin : 0
       margin_bottom = top + tile_height < height ? margin : 0
+      column_index = 0
 
       loop do
         margin_left = left.positive? ? margin : 0
@@ -80,14 +92,18 @@ Image '#{original_image_path}'
           margin_top: margin_top,
           margin_left: margin_left,
           margin_bottom: margin_bottom,
-          margin_right: margin_right
+          margin_right: margin_right,
+          row_index: row_index,
+          column_index: column_index
         )
         left += tile_width + margin_left + margin_right
+        column_index += 1
         break if left >= width
       end
 
       @rows << ::TilesetTooling::Data::TileSetRow.new(tiles)
       top += tile_height + margin_top + margin_bottom
+      row_index += 1
       break if top >= height
     end
 

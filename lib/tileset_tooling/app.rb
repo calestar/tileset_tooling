@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'gli'
+require 'mini_magick'
 require 'semantic_logger'
 
 require 'tileset_tooling/version'
@@ -29,6 +30,7 @@ class ::TilesetTooling::App
     ::SemanticLogger.default_level = :trace
     ::SemanticLogger.add_appender(io: $stdout, formatter: :color)
 
+    # ::MiniMagick.logger.level = ::Logger::DEBUG
     true
   end
 
