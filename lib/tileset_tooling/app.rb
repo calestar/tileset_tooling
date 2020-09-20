@@ -51,7 +51,8 @@ class ::TilesetTooling::App
       insert_command.switch([:'skip-specs'], desc: 'Skips the reading of the specs')
       insert_command.flag([:output], default_value: nil, desc: 'Path where to store result', arg_name: 'path')
       insert_command.action do |_, options, args|
-        command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
+        specs_loader = ::TilesetTooling::Utils::SpecsLoader.new
+        command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
         command.unpack!
         command.run
       end

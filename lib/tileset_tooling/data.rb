@@ -8,6 +8,9 @@ require 'mini_magick'
 module ::TilesetTooling::Data
 end
 
+# Needs to be first
 require 'tileset_tooling/data/types'
+
+require 'tileset_tooling/data/point'
 require 'tileset_tooling/data/tile'
 require 'tileset_tooling/data/tileset'

@@ -13,27 +13,15 @@ class ::TilesetTooling::Data::TileSetRow
   attr_reader :tiles
 end
 
-# Class representing a TileSet's information
-class ::TilesetTooling::Data::TileSet < ::Dry::Struct
-  attribute :image, ::TilesetTooling::Data::Types::ImageType
-  attribute :original_image_path, ::TilesetTooling::Data::Types::String
+# Class representing any TileSet's information
+class ::TilesetTooling::Data::TileSetBase < ::Dry::Struct
+  attribute :height, ::TilesetTooling::Data::Types::Integer
+  attribute :width, ::TilesetTooling::Data::Types::Integer
   attribute :tile_height, ::TilesetTooling::Data::Types::Integer
   attribute :tile_width, ::TilesetTooling::Data::Types::Integer
   attribute :margin, ::TilesetTooling::Data::Types::Integer
   attribute :offset_top, ::TilesetTooling::Data::Types::Integer
   attribute :offset_left, ::TilesetTooling::Data::Types::Integer
-
-  # Helper to print all information in the image
-  def to_s
-    %(
-Image '#{original_image_path}'
-  Tile height: #{tile_height}
-  Tile width: #{tile_width}
-  Margin: #{margin}
-  Top offset: #{offset_top}
-  Left offset: #{offset_left}
-  Number of tiles: #{rows.count * rows[0].tiles.count})
-  end
 
   # Runs the given bloc on each tile of the tileset
   def for_each_tile(&block)
@@ -44,16 +32,6 @@ Image '#{original_image_path}'
     end
   end
 
-  # Gets the height of the tileset/image
-  def height
-    image.height
-  end
-
-  # Gets the width of the tileset/image
-  def width
-    image.width
-  end
-
   # Gets the number of tiles per row
   def nb_tiles_per_row
     rows[0].tiles.length
@@ -62,6 +40,11 @@ Image '#{original_image_path}'
   # Gets the number of tiles per column
   def nb_tiles_per_column
     rows.length
+  end
+
+  # Gets the tile at the specified row/column
+  def tile_at(row_index, column_index)
+    rows[row_index].tiles[column_index]
   end
 
   private
@@ -109,4 +92,23 @@ Image '#{original_image_path}'
 
     @rows
   end
+end
+
+# Real tileset, associated with an actual image on disk
+class ::TilesetTooling::Data::FileTileSet < ::TilesetTooling::Data::TileSetBase
+  attribute :image, ::TilesetTooling::Data::Types::ImageType
+  attribute :original_image_path, ::TilesetTooling::Data::Types::String
+
+  def self.new(**kwargs)
+    image = kwargs[:image]
+    kwargs[:image] = image
+    kwargs[:height] = image.height
+    kwargs[:width] = image.width
+
+    super(**kwargs)
+  end
+end
+
+# Virtual tileset, not associated with an actual image
+class ::TilesetTooling::Data::VirtualTileSet < ::TilesetTooling::Data::TileSetBase
 end
