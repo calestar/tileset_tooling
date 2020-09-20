@@ -2,11 +2,18 @@
 # frozen_string_literal: true
 
 require 'tileset_tooling/data'
+require 'tileset_tooling/utils'
 
 require 'yaml'
 
 # Command used to insert bleed around tiles
 class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Command
+  # Constructor, initializes a few internal
+  def initialize(options, args, specs_loader)
+    @specs_loader = specs_loader
+    super(options, args)
+  end
+
   # Validates arguments/options and unpacks them
   def unpack!
     raise(::StandardError, 'Missing argument') unless @args.count == 1
@@ -21,27 +28,56 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
     @logger.info("Adding bleed to tiles in image file '#{@image_path}'")
     tileset = gather_image_information
 
-    raise(::StandardError, 'Current implementation needs an existing margin') unless tileset.margin.positive?
-
-    ::MiniMagick::Tool::Convert.new do |convert|
-      convert.background('none')
-      convert << tileset.original_image_path
-
-      tileset.for_each_tile do |tile|
-        copy_rect(convert, tile.left, tile.top, 1, tile.width, tile.left, tile.top - 1) unless tile.top <= 0
-        copy_rect(convert, tile.left, tile.bottom - 1, 1, tile.width, tile.left, tile.bottom) unless tile.bottom >= tileset.height
-        copy_rect(convert, tile.left, tile.top, tile.height, 1, tile.left - 1, tile.top) unless tile.left <= 0
-        copy_rect(convert, tile.right - 1, tile.top, tile.height, 1, tile.right, tile.top) unless tile.right >= tileset.width
-      end
-
-      convert.flatten
-      convert << result_path
+    if tileset.margin.positive?
+      modify_margin(tileset)
+    else
+      add_margin(tileset)
     end
 
     @logger.info("Result stored in '#{result_path}'")
   end
 
   private
+
+  def modify_margin(tileset)
+    ::MiniMagick::Tool::Convert.new do |convert|
+      convert.background('none')
+      convert << tileset.original_image_path
+
+      tileset.for_each_tile do |tile|
+        generate_bleed(convert, tileset, tile)
+      end
+
+      convert.flatten
+      convert << result_path
+    end
+  end
+
+  def add_margin(tileset)
+    nb_pixels_in_bleed = 1
+    new_tileset = ::TilesetTooling::Utils.tileset_with_margin_from(tileset, nb_pixels_in_bleed)
+    image_path = tileset.original_image_path
+
+    ::MiniMagick::Tool::Convert.new do |convert|
+      convert.background('none')
+
+      # Copy the original and resize so that we keep all the image specs
+      convert << image_path
+      convert.resize("#{new_tileset.width}x#{new_tileset.height}!")
+      convert.fill('white').draw("rectangle 0,0 #{new_tileset.width},#{new_tileset.height}").transparent('white')
+      convert.compose('Over')
+
+      # Copy tiles and bled
+      tileset.for_each_tile do |tile|
+        dest = new_tileset.tile_at(tile.row_index, tile.column_index)
+        copy_tile(convert, image_path, tile, dest)
+        generate_bleed(convert, tileset, tile, destination: dest, image_path: image_path)
+      end
+
+      convert.flatten
+      convert << result_path
+    end
+  end
 
   def result_path
     return @options[:output] if @options[:output]
@@ -53,55 +89,10 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
     "#{directory}/#{file_name}_result#{extension}"
   end
 
-  def ask_specs
-    tile_height =
-      @cli.ask('Tile height?  ', ::Integer) do |q|
-        q.default = 0
-        q.in = 1..256
-      end
-    tile_width =
-      @cli.ask('Tile width?  ', ::Integer) do |q|
-        q.default = 0
-        q.in = 1..256
-      end
-    margin = @cli.ask('Margin?  ', ::Integer) { |q| q.default = 0 }
-    offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
-    offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
-
-    [tile_height, tile_width, margin, offset_top, offset_left]
-  end
-
-  def load_specs_from_file(file_path)
-    @logger.info("Extracting specs from '#{file_path}'")
-    specs = ::YAML.load_file(file_path)
-
-    begin
-      tile_height = specs['specs']['details']['tile_height']
-      tile_width = specs['specs']['details']['tile_width']
-      margin = specs['specs']['details']['margin']
-      offset_top = specs['specs']['details']['offset_top']
-      offset_left = specs['specs']['details']['offset_left']
-    rescue ::NoMethodError
-      raise(::StandardError, 'Invalid specs file')
-    end
-    [tile_height, tile_width, margin, offset_top, offset_left]
-  end
-
-  def find_specs
-    specs_file = ::TilesetTooling::Utils.image_spec_file_path(@image_path)
-    if !@options[:'skip-specs'] && ::File.exist?(specs_file)
-      tile_height, tile_width, margin, offset_top, offset_left = load_specs_from_file(specs_file)
-    else
-      tile_height, tile_width, margin, offset_top, offset_left = ask_specs
-    end
-    [tile_height, tile_width, margin, offset_top, offset_left]
-  end
-
-  # Asks for information about the image and build a tileset
   def gather_image_information
-    tile_height, tile_width, margin, offset_top, offset_left = find_specs
+    tile_height, tile_width, margin, offset_top, offset_left = @specs_loader.find_specs_for(@image_path, @options[:'skip-specs'])
 
-    ::TilesetTooling::Data::TileSet.new(
+    ::TilesetTooling::Data::FileTileSet.new(
       image: ::MiniMagick::Image.open(@image_path),
       original_image_path: @image_path,
       tile_height: tile_height,
@@ -112,15 +103,44 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
     )
   end
 
-  def copy_rect(convert, x1, y1, height, width, x2, y2)
-    # convert image \( +clone -crop WxH+X1+Y1 +repage \) -geometry +X2+Y2 -compose over -composite result
+  def copy_rect(convert, width, height, source, destination, image_path: nil)
     convert.stack do |stack|
-      stack.clone.+ # rubocop:disable Lint/Void
-      stack.crop("#{width}x#{height}+#{x1}+#{y1}")
-      stack.repage.+
+      if image_path.nil?
+        stack.clone.+
+      else
+        stack << image_path
+      end
+      stack.crop("#{width}x#{height}+#{source.x}+#{source.y}").repage.+
     end
-    convert.geometry("+#{x2}+#{y2}")
-    convert.compose('Over')
-    convert.composite
+    convert.geometry("+#{destination.x}+#{destination.y}")
+    convert.compose('Over').composite
+  end
+
+  def copy_tile(convert, image_path, source, destination)
+    copy_rect(convert, source.width, source.height, source.top_left, destination.top_left, image_path: image_path)
+  end
+
+  def generate_bleed(convert, tileset, source, destination: nil, image_path: nil)
+    destination = source if destination.nil?
+
+    # Top
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.left, y: source.top)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.left, y: destination.top - 1)
+    copy_rect(convert, source.width, 1, source_coord, dest_coord, image_path: image_path) unless source.top <= 0
+
+    # Bottom
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.left, y: source.bottom - 1)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.left, y: destination.bottom)
+    copy_rect(convert, source.width, 1, source_coord, dest_coord, image_path: image_path) unless source.bottom >= tileset.height
+
+    # Left
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.left, y: source.top)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.left - 1, y: destination.top)
+    copy_rect(convert, 1, source.height, source_coord, dest_coord, image_path: image_path) unless source.left <= 0
+
+    # Right
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.right - 1, y: source.top)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.right, y: destination.top)
+    copy_rect(convert, 1, source.height, source_coord, dest_coord, image_path: image_path) unless source.right >= tileset.width
   end
 end

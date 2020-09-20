@@ -2,6 +2,7 @@
 # frozen_string_literal: true
 
 require 'gli'
+require 'mini_magick'
 require 'semantic_logger'
 
 require 'tileset_tooling/version'
@@ -29,6 +30,7 @@ class ::TilesetTooling::App
     ::SemanticLogger.default_level = :trace
     ::SemanticLogger.add_appender(io: $stdout, formatter: :color)
 
+    # ::MiniMagick.logger.level = ::Logger::DEBUG
     true
   end
 
@@ -49,7 +51,8 @@ class ::TilesetTooling::App
       insert_command.switch([:'skip-specs'], desc: 'Skips the reading of the specs')
       insert_command.flag([:output], default_value: nil, desc: 'Path where to store result', arg_name: 'path')
       insert_command.action do |_, options, args|
-        command = ::TilesetTooling::Commands::InsertBleed.new(options, args)
+        specs_loader = ::TilesetTooling::Utils::SpecsLoader.new
+        command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
         command.unpack!
         command.run
       end

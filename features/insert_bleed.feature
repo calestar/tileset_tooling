@@ -13,8 +13,8 @@ Feature: App inserts bleed correctly
     Then I type "0"
     Then I type "0"
     Then I type "0"
-    Then the exit status should be 1
-    Then the output should contain "Current implementation needs an existing margin"
+    Then the exit status should be 0
+    Then generated file should be the same as data result "simple_no_margin.png"
 
   Scenario: Insert bleed generate default output
     When I insert bleed to test data "simple_with_margin.png"
