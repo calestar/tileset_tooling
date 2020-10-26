@@ -20,3 +20,4 @@ class ::TilesetTooling::Commands::Command
 end
 
 require 'tileset_tooling/commands/insert_bleed'
+require 'tileset_tooling/commands/create_tileset'

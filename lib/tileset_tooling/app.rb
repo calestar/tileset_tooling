@@ -58,4 +58,17 @@ class ::TilesetTooling::App
       end
     end
   end
+
+  desc 'Commands relating to tilesets'
+  command :tileset do |tileset_command|
+    tileset_command.arg(:output_file)
+    tileset_command.desc('Creates a new tileset')
+    tileset_command.command(:create) do |create_command|
+      create_command.action do |_, options, args|
+        command = ::TilesetTooling::Commands::CreateTileset.new(options, args)
+        command.unpack!
+        command.run
+      end
+    end
+  end
 end
