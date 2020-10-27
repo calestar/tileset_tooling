@@ -12,5 +12,6 @@ end
 require 'tileset_tooling/data/types'
 
 require 'tileset_tooling/data/point'
+require 'tileset_tooling/data/specs'
 require 'tileset_tooling/data/tile'
 require 'tileset_tooling/data/tileset'

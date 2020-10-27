@@ -90,16 +90,16 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
   end
 
   def gather_image_information
-    tile_height, tile_width, margin, offset_top, offset_left = @specs_loader.find_specs_for(@image_path, @options[:'skip-specs'])
+    specs = @specs_loader.find_specs_for(@image_path, @options[:'skip-specs'])
 
     ::TilesetTooling::Data::FileTileSet.new(
       image: ::MiniMagick::Image.open(@image_path),
       original_image_path: @image_path,
-      tile_height: tile_height,
-      tile_width: tile_width,
-      margin: margin,
-      offset_top: offset_top,
-      offset_left: offset_left
+      tile_height: specs.tile_height,
+      tile_width: specs.tile_width,
+      margin: specs.margin,
+      offset_top: specs.offset_top,
+      offset_left: specs.offset_left
     )
   end
 

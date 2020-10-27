@@ -1,6 +1,8 @@
 # Copyright (c) 2020 Jean-Sebastien Gelinas, see LICENSE.txt
 # frozen_string_literal: true
 
+require 'tileset_tooling/data'
+
 # Class used to find/load specs for a given image
 class ::TilesetTooling::Utils::SpecsLoader
   # Constructor, initializes a few internals
@@ -44,7 +46,13 @@ class ::TilesetTooling::Utils::SpecsLoader
     offset_top = @cli.ask('Top Offset?  ', ::Integer) { |q| q.default = 0 }
     offset_left = @cli.ask('Left Offset?  ', ::Integer) { |q| q.default = 0 }
 
-    [tile_height, tile_width, margin, offset_top, offset_left]
+    ::TilesetTooling::Data::Specs.new(
+      tile_height: tile_height,
+      tile_width: tile_width,
+      margin: margin,
+      offset_top: offset_top,
+      offset_left: offset_left
+    )
   end
 
   def load_specs_from_file(file_path)
@@ -60,6 +68,13 @@ class ::TilesetTooling::Utils::SpecsLoader
     rescue ::NoMethodError
       raise(::StandardError, 'Invalid specs file')
     end
-    [tile_height, tile_width, margin, offset_top, offset_left]
+
+    ::TilesetTooling::Data::Specs.new(
+      tile_height: tile_height,
+      tile_width: tile_width,
+      margin: margin,
+      offset_top: offset_top,
+      offset_left: offset_left
+    )
   end
 end

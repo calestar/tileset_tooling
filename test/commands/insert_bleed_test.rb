@@ -11,7 +11,14 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs_loader.expects(:ask_specs).returns([16, 16, 0, 0, 0])
+    specs = ::TilesetTooling::Data::Specs.new(
+      tile_height: 16,
+      tile_width: 16,
+      margin: 0,
+      offset_top: 0,
+      offset_left: 0
+    )
+    specs_loader.expects(:ask_specs).returns(specs)
     command.unpack!
     command.run
     assert ::File.exist?(expected)
@@ -28,7 +35,14 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs_loader.expects(:ask_specs).returns([16, 16, 1, 0, 0])
+    specs = ::TilesetTooling::Data::Specs.new(
+      tile_height: 16,
+      tile_width: 16,
+      margin: 1,
+      offset_top: 0,
+      offset_left: 0
+    )
+    specs_loader.expects(:ask_specs).returns(specs)
     command.unpack!
     command.run
     assert ::File.exist?(expected)
@@ -74,7 +88,14 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output, 'skip-specs': true }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs_loader.expects(:ask_specs).returns([16, 16, 1, 0, 0])
+    specs = ::TilesetTooling::Data::Specs.new(
+      tile_height: 16,
+      tile_width: 16,
+      margin: 1,
+      offset_top: 0,
+      offset_left: 0
+    )
+    specs_loader.expects(:ask_specs).returns(specs)
     command.unpack!
     command.run
     assert ::File.exist?(expected)
