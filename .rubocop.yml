@@ -51,12 +51,18 @@ Style/DocumentationMethod:
         - 'features/**/*'
         - 'test/**/*'
 
+Style/EmptyElse:
+    Enabled: False
+
 Style/MethodCallWithArgsParentheses:
     Exclude:
         - 'features/**/*'
         - 'test/**/*'
     IgnoredMethods:
         - require
+
+Style/MissingElse:
+    Enabled: False
 
 Style/Copyright:
     Notice: '# Copyright \(c\) 2020 Jean-Sebastien Gelinas, see LICENSE\.txt'

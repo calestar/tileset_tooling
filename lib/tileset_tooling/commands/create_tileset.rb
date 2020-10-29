@@ -8,17 +8,54 @@ require 'yaml'
 
 # Command used to create new tilesets
 class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Command
+  # Constructor, initializes a few internal
+  def initialize(options, args, specs_loader)
+    @specs_loader = specs_loader
+    super(options, args)
+  end
+
   # Validates arguments/options and unpacks them
   def unpack!
     raise(::StandardError, 'Missing argument') unless @args.count == 1
 
-    @image_path = @args.shift
+    @result_path = @args.shift
 
-    raise(::StandardError, "File '#{@image_path}' already exists") if ::File.exist?(@image_path)
+    raise(::StandardError, "File '#{@result_path}' already exists") if ::File.exist?(@result_path)
   end
 
   # Runs this command
   def run
     @logger.info("Creating new tileset at '#{@image_path}'")
+    tileset = gather_image_information
+
+    ::MiniMagick::Tool::Convert.new do |convert|
+      convert.size("#{tileset.width}x#{tileset.height}")
+      convert.canvas('transparent')
+
+      # Copy tiles and bled
+      tileset.for_each_tile do |tile|
+        color = tileset.pattern.color_for(tile.row_index, tile.column_index)
+        convert.fill(color).draw("rectangle #{tile.left},#{tile.top} #{tile.right},#{tile.bottom}")
+      end
+
+      convert << @result_path
+    end
+  end
+
+  private
+
+  def gather_image_information
+    specs = @specs_loader.find_specs_for(@result_path, @options[:'skip-specs'])
+
+    ::TilesetTooling::Data::NewTileSet.new(
+      tile_height: specs.tile_height,
+      tile_width: specs.tile_width,
+      margin: specs.margin,
+      offset_top: specs.offset_top,
+      offset_left: specs.offset_left,
+      nb_rows: specs.nb_rows,
+      nb_columns: specs.nb_columns,
+      pattern: specs.pattern
+    )
   end
 end

@@ -4,6 +4,19 @@
 require 'test_helper'
 
 class ::TestInsertBleed < ::Test::Unit::TestCase
+  def dummy_specs(margin)
+    ::TilesetTooling::Data::Specs.new(
+      tile_height: 16,
+      tile_width: 16,
+      margin: margin,
+      offset_top: 0,
+      offset_left: 0,
+      nb_rows: 0,
+      nb_columns: 0,
+      pattern: nil
+    )
+  end
+
   def test_margin_required
     input, expected = get_png_data('simple_no_margin.png')
     specs_loader = ::TilesetTooling::Utils::SpecsLoader.new
@@ -11,14 +24,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs = ::TilesetTooling::Data::Specs.new(
-      tile_height: 16,
-      tile_width: 16,
-      margin: 0,
-      offset_top: 0,
-      offset_left: 0
-    )
-    specs_loader.expects(:ask_specs).returns(specs)
+    specs_loader.expects(:ask_specs).returns(dummy_specs(0))
     command.unpack!
     command.run
     assert ::File.exist?(expected)
@@ -35,14 +41,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs = ::TilesetTooling::Data::Specs.new(
-      tile_height: 16,
-      tile_width: 16,
-      margin: 1,
-      offset_top: 0,
-      offset_left: 0
-    )
-    specs_loader.expects(:ask_specs).returns(specs)
+    specs_loader.expects(:ask_specs).returns(dummy_specs(1))
     command.unpack!
     command.run
     assert ::File.exist?(expected)
@@ -88,14 +87,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output, 'skip-specs': true }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs = ::TilesetTooling::Data::Specs.new(
-      tile_height: 16,
-      tile_width: 16,
-      margin: 1,
-      offset_top: 0,
-      offset_left: 0
-    )
-    specs_loader.expects(:ask_specs).returns(specs)
+    specs_loader.expects(:ask_specs).returns(dummy_specs(1))
     command.unpack!
     command.run
     assert ::File.exist?(expected)

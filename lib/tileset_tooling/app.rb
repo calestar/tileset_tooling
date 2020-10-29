@@ -64,8 +64,10 @@ class ::TilesetTooling::App
     tileset_command.arg(:output_file)
     tileset_command.desc('Creates a new tileset')
     tileset_command.command(:create) do |create_command|
+      create_command.switch([:'skip-specs'], desc: 'Skips the reading of the specs')
       create_command.action do |_, options, args|
-        command = ::TilesetTooling::Commands::CreateTileset.new(options, args)
+        specs_loader = ::TilesetTooling::Utils::SpecsLoader.new(for_new_image: true)
+        command = ::TilesetTooling::Commands::CreateTileset.new(options, args, specs_loader)
         command.unpack!
         command.run
       end

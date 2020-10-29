@@ -8,4 +8,7 @@ class ::TilesetTooling::Data::Specs < ::Dry::Struct
   attribute :margin, ::TilesetTooling::Data::Types::Integer
   attribute :offset_top, ::TilesetTooling::Data::Types::Integer
   attribute :offset_left, ::TilesetTooling::Data::Types::Integer
+  attribute :nb_rows, ::TilesetTooling::Data::Types::Integer.optional
+  attribute :nb_columns, ::TilesetTooling::Data::Types::Integer.optional
+  attribute :pattern, ::TilesetTooling::Data::Types::PatternType.optional
 end
