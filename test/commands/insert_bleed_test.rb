@@ -27,11 +27,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     specs_loader.expects(:ask_specs).returns(dummy_specs(0))
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 
   def test_simple_file
@@ -44,11 +40,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     specs_loader.expects(:ask_specs).returns(dummy_specs(1))
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 
   def test_simple_file_with_specs
@@ -60,11 +52,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 
   def test_simple_file_with_bad_specs
@@ -90,10 +78,6 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     specs_loader.expects(:ask_specs).returns(dummy_specs(1))
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 end

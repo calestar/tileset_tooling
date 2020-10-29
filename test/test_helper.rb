@@ -5,6 +5,7 @@ require 'test/unit'
 require 'mocha/test_unit'
 
 require 'tileset_tooling/app'
+require 'test_assertions'
 
 # In case we need debugging, uncomment the following
 # ::SemanticLogger.sync!
