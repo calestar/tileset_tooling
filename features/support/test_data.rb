@@ -3,12 +3,16 @@
 
 require 'tileset_tooling/utils'
 
+def test_data_dir
+  "#{__dir__}/../../test/data"
+end
+
 def test_data_path(name)
-  "#{__dir__}/../../test/data/#{name}"
+  "#{test_data_dir}/#{name}"
 end
 
 def test_result_path(name)
-  "#{__dir__}/../../test/data/expected/#{name}"
+  "#{test_data_dir}/expected/#{name}"
 end
 
 def image_signature(path)

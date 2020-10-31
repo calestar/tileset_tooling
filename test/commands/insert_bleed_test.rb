@@ -4,6 +4,19 @@
 require 'test_helper'
 
 class ::TestInsertBleed < ::Test::Unit::TestCase
+  def dummy_specs(margin)
+    ::TilesetTooling::Data::Specs.new(
+      tile_height: 16,
+      tile_width: 16,
+      margin: margin,
+      offset_top: 0,
+      offset_left: 0,
+      nb_rows: 0,
+      nb_columns: 0,
+      pattern: nil
+    )
+  end
+
   def test_margin_required
     input, expected = get_png_data('simple_no_margin.png')
     specs_loader = ::TilesetTooling::Utils::SpecsLoader.new
@@ -11,14 +24,10 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs_loader.expects(:ask_specs).returns([16, 16, 0, 0, 0])
+    specs_loader.expects(:ask_specs).returns(dummy_specs(0))
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 
   def test_simple_file
@@ -28,14 +37,10 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs_loader.expects(:ask_specs).returns([16, 16, 1, 0, 0])
+    specs_loader.expects(:ask_specs).returns(dummy_specs(1))
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 
   def test_simple_file_with_specs
@@ -47,11 +52,7 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 
   def test_simple_file_with_bad_specs
@@ -74,13 +75,9 @@ class ::TestInsertBleed < ::Test::Unit::TestCase
     options = { output: output, 'skip-specs': true }
     args = [input]
     command = ::TilesetTooling::Commands::InsertBleed.new(options, args, specs_loader)
-    specs_loader.expects(:ask_specs).returns([16, 16, 1, 0, 0])
+    specs_loader.expects(:ask_specs).returns(dummy_specs(1))
     command.unpack!
     command.run
-    assert ::File.exist?(expected)
-    assert ::File.exist?(output)
-    output_signature = ::TilesetTooling::Utils.image_signature(output)
-    expected_signature = ::TilesetTooling::Utils.image_signature(expected)
-    assert_equal(expected_signature, output_signature)
+    assert_signature_of(output, expected)
   end
 end

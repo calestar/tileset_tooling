@@ -59,17 +59,17 @@ class ::TilesetTooling::Data::TileSetBase < ::Dry::Struct
     loop do
       left = offset_left
       tiles = []
-      margin_top = top.positive? ? margin : 0
+      margin_top = row_index.positive? ? margin : 0
       margin_bottom = top + tile_height < height ? margin : 0
       column_index = 0
 
       loop do
-        margin_left = left.positive? ? margin : 0
+        margin_left = column_index.positive? ? margin : 0
         margin_right = left + tile_width < width ? margin : 0
 
         tiles << ::TilesetTooling::Data::Tile.new(
-          top: top + margin_top,
-          left: left + margin_left,
+          tile_top: top + margin_top,
+          tile_left: left + margin_left,
           height: tile_height,
           width: tile_width,
           margin_top: margin_top,
@@ -111,4 +111,21 @@ end
 
 # Virtual tileset, not associated with an actual image
 class ::TilesetTooling::Data::VirtualTileSet < ::TilesetTooling::Data::TileSetBase
+end
+
+# New tileset, created based on number of tiles we want and such
+class ::TilesetTooling::Data::NewTileSet < ::TilesetTooling::Data::TileSetBase
+  attribute :nb_rows, ::TilesetTooling::Data::Types::Integer
+  attribute :nb_columns, ::TilesetTooling::Data::Types::Integer
+  attribute :pattern, ::TilesetTooling::Data::Types::PatternType
+
+  def self.new(**kwargs)
+    @nb_rows = kwargs[:nb_rows]
+    @nb_columns = kwargs[:nb_columns]
+    @pattern = kwargs[:pattern]
+    kwargs[:height] = @nb_rows * kwargs[:tile_height] + (@nb_rows - 1) * (2 * kwargs[:margin]) + kwargs[:offset_top]
+    kwargs[:width] = @nb_columns * kwargs[:tile_width] + (@nb_columns - 1) * (2 * kwargs[:margin]) + kwargs[:offset_left]
+
+    super(**kwargs)
+  end
 end

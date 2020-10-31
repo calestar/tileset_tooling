@@ -58,4 +58,24 @@ class ::TilesetTooling::App
       end
     end
   end
+
+  desc 'Commands relating to tilesets'
+  command :tileset do |tileset_command|
+    tileset_command.arg(:output_file)
+    tileset_command.desc('Creates a new tileset')
+    tileset_command.command(:create) do |create_command|
+      create_command.switch([:overwrite], default_value: false, desc: 'Overwrites the output file if it already exists')
+      create_command.flag(
+        [:'specs-file'],
+        default_value: nil,
+        desc: 'Defines the specs file to read instead of asking the user'
+      )
+      create_command.action do |_, options, args|
+        specs_loader = ::TilesetTooling::Utils::SpecsLoader.new(for_new_image: true)
+        command = ::TilesetTooling::Commands::CreateTileset.new(options, args, specs_loader)
+        command.unpack!
+        command.run
+      end
+    end
+  end
 end
