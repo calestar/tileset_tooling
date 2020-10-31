@@ -67,7 +67,7 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
       convert.fill('white').draw("rectangle 0,0 #{new_tileset.width},#{new_tileset.height}").transparent('white')
       convert.compose('Over')
 
-      # Copy tiles and bled
+      # Copy tiles and bleed
       tileset.for_each_tile do |tile|
         dest = new_tileset.tile_at(tile.row_index, tile.column_index)
         copy_tile(convert, image_path, tile, dest)
@@ -124,23 +124,23 @@ class ::TilesetTooling::Commands::InsertBleed < ::TilesetTooling::Commands::Comm
     destination = source if destination.nil?
 
     # Top
-    source_coord = ::TilesetTooling::Data::Point.new(x: source.left, y: source.top)
-    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.left, y: destination.top - 1)
-    copy_rect(convert, source.width, 1, source_coord, dest_coord, image_path: image_path) unless source.top <= 0
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.tile_left, y: source.tile_top)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.tile_left, y: destination.tile_top - 1)
+    copy_rect(convert, source.width, 1, source_coord, dest_coord, image_path: image_path) unless source.full_top <= 0
 
     # Bottom
-    source_coord = ::TilesetTooling::Data::Point.new(x: source.left, y: source.bottom - 1)
-    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.left, y: destination.bottom)
-    copy_rect(convert, source.width, 1, source_coord, dest_coord, image_path: image_path) unless source.bottom >= tileset.height
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.tile_left, y: source.tile_bottom - 1)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.tile_left, y: destination.tile_bottom)
+    copy_rect(convert, source.width, 1, source_coord, dest_coord, image_path: image_path) unless source.full_bottom >= tileset.height
 
     # Left
-    source_coord = ::TilesetTooling::Data::Point.new(x: source.left, y: source.top)
-    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.left - 1, y: destination.top)
-    copy_rect(convert, 1, source.height, source_coord, dest_coord, image_path: image_path) unless source.left <= 0
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.tile_left, y: source.tile_top)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.tile_left - 1, y: destination.tile_top)
+    copy_rect(convert, 1, source.height, source_coord, dest_coord, image_path: image_path) unless source.full_left <= 0
 
     # Right
-    source_coord = ::TilesetTooling::Data::Point.new(x: source.right - 1, y: source.top)
-    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.right, y: destination.top)
-    copy_rect(convert, 1, source.height, source_coord, dest_coord, image_path: image_path) unless source.right >= tileset.width
+    source_coord = ::TilesetTooling::Data::Point.new(x: source.tile_right - 1, y: source.tile_top)
+    dest_coord = ::TilesetTooling::Data::Point.new(x: destination.tile_right, y: destination.tile_top)
+    copy_rect(convert, 1, source.height, source_coord, dest_coord, image_path: image_path) unless source.full_right >= tileset.width
   end
 end

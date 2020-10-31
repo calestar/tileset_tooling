@@ -23,6 +23,15 @@ class ::TilesetTooling::Utils::SpecsLoader
     end
   end
 
+  # Loads the specs from the given file or asks for it
+  def load_specs_from(specs_file)
+    if specs_file && ::File.exist?(specs_file)
+      load_specs_from_file(specs_file)
+    else
+      ask_specs
+    end
+  end
+
   private
 
   # Gets the path to the spec file that should go with the given image
@@ -60,10 +69,12 @@ class ::TilesetTooling::Utils::SpecsLoader
           q.in = 1..256
         end
       pattern =
-        @cli.choose do |menu|
-          menu.choice('Checkerboard pattern (black and white)') { ::TilesetTooling::Patterns::Checkerboard.new(:black, :white) }
-          menu.choice('Checkerboard pattern (green and yellow)') { ::TilesetTooling::Patterns::Checkerboard.new(:green, :yellow) }
-        end
+        pattern_from_str(
+          @cli.choose do |menu|
+            menu.choice('Checkerboard pattern (black and white)') { 'black&white' }
+            menu.choice('Checkerboard pattern (green and yellow)') { 'green&yellow' }
+          end
+        )
     end
 
     ::TilesetTooling::Data::Specs.new(
@@ -92,7 +103,7 @@ class ::TilesetTooling::Utils::SpecsLoader
       offset_top = details.fetch('offset_top')
       offset_left = details.fetch('offset_left')
 
-      pattern = specs.fetch('pattern') if @for_new_image
+      pattern = pattern_from_str(specs.fetch('pattern')) if @for_new_image
       nb_rows = specs.fetch('nb_rows') if @for_new_image
       nb_columns = specs.fetch('nb_columns') if @for_new_image
     rescue ::NoMethodError
@@ -109,5 +120,16 @@ class ::TilesetTooling::Utils::SpecsLoader
       nb_rows: nb_rows,
       nb_columns: nb_columns
     )
+  end
+
+  def pattern_from_str(pattern_str)
+    case pattern_str
+    when 'black&white'
+      ::TilesetTooling::Patterns::Checkerboard.new(:black, :white)
+    when 'green&yellow'
+      ::TilesetTooling::Patterns::Checkerboard.new(:green, :yellow)
+    else
+      raise(::StandardError, "Unknown pattern '#{pattern_str}'")
+    end
   end
 end

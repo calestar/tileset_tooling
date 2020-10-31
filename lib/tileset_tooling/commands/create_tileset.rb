@@ -18,14 +18,15 @@ class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Co
   def unpack!
     raise(::StandardError, 'Missing argument') unless @args.count == 1
 
+    overwrite = @options[:overwrite]
     @result_path = @args.shift
 
-    raise(::StandardError, "File '#{@result_path}' already exists") if ::File.exist?(@result_path)
+    raise(::StandardError, "File '#{@result_path}' already exists") if ::File.exist?(@result_path) && !overwrite
   end
 
   # Runs this command
   def run
-    @logger.info("Creating new tileset at '#{@image_path}'")
+    @logger.info("Creating new tileset at '#{@result_path}'")
     tileset = gather_image_information
 
     ::MiniMagick::Tool::Convert.new do |convert|
@@ -35,7 +36,7 @@ class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Co
       # Copy tiles and bled
       tileset.for_each_tile do |tile|
         color = tileset.pattern.color_for(tile.row_index, tile.column_index)
-        convert.fill(color).draw("rectangle #{tile.left},#{tile.top} #{tile.right},#{tile.bottom}")
+        convert.fill(color).draw("rectangle #{tile.tile_left},#{tile.tile_top} #{tile.tile_right - 1},#{tile.tile_bottom - 1}")
       end
 
       convert << @result_path
@@ -45,7 +46,7 @@ class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Co
   private
 
   def gather_image_information
-    specs = @specs_loader.find_specs_for(@result_path, @options[:'skip-specs'])
+    specs = @specs_loader.load_specs_from(@options[:'specs-file'])
 
     ::TilesetTooling::Data::NewTileSet.new(
       tile_height: specs.tile_height,

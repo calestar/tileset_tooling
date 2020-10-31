@@ -20,5 +20,7 @@ def get_png_data(name)
 end
 
 def output_file_path
-  "#{__dir__}/data/tmp_output.png"
+  path = "#{__dir__}/data/tmp_output.png"
+  ::File.delete(path) if ::File.exist?(path)
+  path
 end

@@ -59,17 +59,17 @@ class ::TilesetTooling::Data::TileSetBase < ::Dry::Struct
     loop do
       left = offset_left
       tiles = []
-      margin_top = top.positive? ? margin : 0
+      margin_top = row_index.positive? ? margin : 0
       margin_bottom = top + tile_height < height ? margin : 0
       column_index = 0
 
       loop do
-        margin_left = left.positive? ? margin : 0
+        margin_left = column_index.positive? ? margin : 0
         margin_right = left + tile_width < width ? margin : 0
 
         tiles << ::TilesetTooling::Data::Tile.new(
-          top: top + margin_top,
-          left: left + margin_left,
+          tile_top: top + margin_top,
+          tile_left: left + margin_left,
           height: tile_height,
           width: tile_width,
           margin_top: margin_top,
