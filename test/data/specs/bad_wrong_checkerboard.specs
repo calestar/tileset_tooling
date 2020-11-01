@@ -1,7 +1,7 @@
 specs:
   nb_rows: 2
   nb_columns: 3
-  pattern: 'checkerboard;black&white'
+  pattern: 'checkerboard;abc&def'
   details:
     tile_height: 16
     tile_width: 16

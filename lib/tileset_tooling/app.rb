@@ -70,6 +70,11 @@ class ::TilesetTooling::App
         default_value: nil,
         desc: 'Defines the specs file to read instead of asking the user'
       )
+      create_command.switch(
+        [:'no-new-specs-file'],
+        default_value: false,
+        desc: 'Do not generate new spec file on tileset creation'
+      )
       create_command.action do |_, options, args|
         specs_loader = ::TilesetTooling::Utils::SpecsLoader.new(for_new_image: true)
         command = ::TilesetTooling::Commands::CreateTileset.new(options, args, specs_loader)

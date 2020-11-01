@@ -19,6 +19,7 @@ class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Co
     raise(::StandardError, 'Missing argument') unless @args.count == 1
 
     overwrite = @options[:overwrite]
+    @generate_specs_file = !@options[:'no-new-specs-file']
     @result_path = @args.shift
 
     raise(::StandardError, "File '#{@result_path}' already exists") if ::File.exist?(@result_path) && !overwrite
@@ -26,6 +27,13 @@ class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Co
 
   # Runs this command
   def run
+    generate_tileset
+    generate_specs_file if @generate_specs_file
+  end
+
+  private
+
+  def generate_tileset
     @logger.info("Creating new tileset at '#{@result_path}'")
     tileset = gather_image_information
 
@@ -43,20 +51,23 @@ class ::TilesetTooling::Commands::CreateTileset < ::TilesetTooling::Commands::Co
     end
   end
 
-  private
+  def generate_specs_file
+    @logger.info("Creating new specsfile at '#{@result_path}'")
+    @specs_loader.save_specs_for(@result_path, @specs)
+  end
 
   def gather_image_information
-    specs = @specs_loader.load_specs_from(@options[:'specs-file'])
+    @specs = @specs_loader.load_specs_from(@options[:'specs-file'])
 
     ::TilesetTooling::Data::NewTileSet.new(
-      tile_height: specs.tile_height,
-      tile_width: specs.tile_width,
-      margin: specs.margin,
-      offset_top: specs.offset_top,
-      offset_left: specs.offset_left,
-      nb_rows: specs.nb_rows,
-      nb_columns: specs.nb_columns,
-      pattern: specs.pattern
+      tile_height: @specs.tile_height,
+      tile_width: @specs.tile_width,
+      margin: @specs.margin,
+      offset_top: @specs.offset_top,
+      offset_left: @specs.offset_left,
+      nb_rows: @specs.nb_rows,
+      nb_columns: @specs.nb_columns,
+      pattern: @specs.pattern
     )
   end
 end

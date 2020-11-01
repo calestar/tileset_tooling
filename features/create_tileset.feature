@@ -27,3 +27,9 @@ Feature: App creates tilesets correctly
     When I create a new tileset using specs "create_nomargin_nooffset.specs"
     Then the exit status should be 0
     Then generated file should be the same as data result "create_nomargin_nooffset.png"
+
+  Scenario: Create tileset with specs with header
+    When I create a new tileset using specs "create_1pxmargin_nooffset.specs"
+    Then the exit status should be 0
+    Then generated file should be the same as data result "create_1pxmargin_nooffset.png"
+    Then generated specs file should be the same as specs result "create_1pxmargin_nooffset.specs"

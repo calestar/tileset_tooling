@@ -15,4 +15,14 @@ class ::TilesetTooling::Patterns::Checkerboard < ::TilesetTooling::Patterns::Pat
     first, second = row_index.even? ? [@color1, @color2] : [@color2, @color1]
     column_index.even? ? first : second
   end
+
+  # Used when serializing to YAML for compatiblity
+  def to_yaml_string
+    "checkerboard;#{@color1}&#{@color2}"
+  end
+
+  # Used when asking the user a choice of patterns
+  def to_human_choice
+    "Checkerboard pattern (#{@color1} and #{@color2})"
+  end
 end
