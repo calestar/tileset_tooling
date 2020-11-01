@@ -12,15 +12,19 @@ require 'test_assertions'
 # ::SemanticLogger.default_level = :trace
 # ::SemanticLogger.add_appender(io: $stdout, formatter: :color)
 
+def data_dir
+  "#{__dir__}/data/"
+end
+
 def get_png_data(name)
-  input = "#{__dir__}/data/#{name}"
-  expected = "#{__dir__}/data/expected/#{name}"
+  input = "#{data_dir}/#{name}"
+  expected = "#{data_dir}/expected/#{name}"
 
   [input, expected]
 end
 
 def output_file_path
-  path = "#{__dir__}/data/tmp_output.png"
+  path = "#{data_dir}/tmp_output.png"
   ::File.delete(path) if ::File.exist?(path)
   path
 end

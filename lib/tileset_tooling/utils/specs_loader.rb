@@ -11,6 +11,7 @@ class ::TilesetTooling::Utils::SpecsLoader
     @for_new_image = for_new_image
     @logger = ::SemanticLogger[self.class.name.split('::').last]
     @cli = ::HighLine.new
+    @pattern_factory = ::TilesetTooling::PatternFactory.new
   end
 
   # Tries to find specs for the given image path
@@ -30,6 +31,12 @@ class ::TilesetTooling::Utils::SpecsLoader
     else
       ask_specs
     end
+  end
+
+  # Saves the given specs to the file
+  def save_specs_for(image_path, specs)
+    specs_file = image_spec_file_path(image_path)
+    save_specs_to_file(specs_file, specs)
   end
 
   private
@@ -69,12 +76,11 @@ class ::TilesetTooling::Utils::SpecsLoader
           q.in = 1..256
         end
       pattern =
-        pattern_from_str(
-          @cli.choose do |menu|
-            menu.choice('Checkerboard pattern (black and white)') { 'black&white' }
-            menu.choice('Checkerboard pattern (green and yellow)') { 'green&yellow' }
+        @cli.choose do |menu|
+          @pattern_factory.for_each_patterns do |choice|
+            menu.choice(choice.to_human_choice) { choice }
           end
-        )
+        end
     end
 
     ::TilesetTooling::Data::Specs.new(
@@ -103,7 +109,7 @@ class ::TilesetTooling::Utils::SpecsLoader
       offset_top = details.fetch('offset_top')
       offset_left = details.fetch('offset_left')
 
-      pattern = pattern_from_str(specs.fetch('pattern')) if @for_new_image
+      pattern = @pattern_factory.find_pattern_from_yaml(specs.fetch('pattern')) if @for_new_image
       nb_rows = specs.fetch('nb_rows') if @for_new_image
       nb_columns = specs.fetch('nb_columns') if @for_new_image
     rescue ::NoMethodError
@@ -122,14 +128,28 @@ class ::TilesetTooling::Utils::SpecsLoader
     )
   end
 
-  def pattern_from_str(pattern_str)
-    case pattern_str
-    when 'black&white'
-      ::TilesetTooling::Patterns::Checkerboard.new(:black, :white)
-    when 'green&yellow'
-      ::TilesetTooling::Patterns::Checkerboard.new(:green, :yellow)
-    else
-      raise(::StandardError, "Unknown pattern '#{pattern_str}'")
+  def save_specs_to_file(specs_file, specs)
+    @logger.info("Extracting specs from '#{specs_file}'")
+    ::File.open(specs_file, 'w') do |file|
+      obj = {
+        specs: {
+          details: {
+            tile_height: specs.tile_height,
+            tile_width: specs.tile_width,
+            margin: specs.margin,
+            offset_top: specs.offset_top,
+            offset_left: specs.offset_left
+          }
+        }
+      }
+
+      if @for_new_image
+        obj[:specs][:nb_rows] = specs.nb_rows
+        obj[:specs][:nb_columns] = specs.nb_columns
+        obj[:specs][:pattern] = specs.pattern.to_yaml_string
+      end
+
+      ::YAML.dump(obj, file)
     end
   end
 end

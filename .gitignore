@@ -1,8 +1,10 @@
 vendor/
 .bundle
 test/data/tmp_output.png
+test/data/tmp_output.specs
 
 results.html
 test/data/*_result.png
+test/data/*_result.specs
 
 tileset_tooling-*.gem
