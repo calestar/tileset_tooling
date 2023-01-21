@@ -11,12 +11,12 @@ PATH
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (6.0.3.3)
+    activesupport (6.1.7.1)
       concurrent-ruby (~> 1.0, >= 1.0.2)
-      i18n (>= 0.7, < 2)
-      minitest (~> 5.1)
-      tzinfo (~> 1.1)
-      zeitwerk (~> 2.2, >= 2.2.2)
+      i18n (>= 1.6, < 2)
+      minitest (>= 5.1)
+      tzinfo (~> 2.0)
+      zeitwerk (~> 2.3)
     aruba (1.0.3)
       childprocess (>= 2.0, < 5.0)
       contracts (~> 0.16.0)
@@ -27,7 +27,7 @@ GEM
     ast (2.4.1)
     builder (3.2.4)
     childprocess (4.0.0)
-    concurrent-ruby (1.1.7)
+    concurrent-ruby (1.1.10)
     contracts (0.16.0)
     cucumber (5.1.1)
       builder (~> 3.2, >= 3.2.4)
@@ -91,12 +91,12 @@ GEM
     ffi (1.13.1)
     gli (2.19.2)
     highline (2.0.3)
-    i18n (1.8.5)
+    i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
     middleware (0.1.0)
     mini_magick (4.10.1)
-    minitest (5.14.2)
+    minitest (5.17.0)
     mocha (1.11.2)
     multi_test (0.1.2)
     parallel (1.19.2)
@@ -137,10 +137,10 @@ GEM
       power_assert
     thor (1.0.1)
     thread_safe (0.3.6)
-    tzinfo (1.2.7)
-      thread_safe (~> 0.1)
+    tzinfo (2.0.5)
+      concurrent-ruby (~> 1.0)
     unicode-display_width (1.7.0)
-    zeitwerk (2.4.0)
+    zeitwerk (2.6.6)
 
 PLATFORMS
   ruby
