@@ -1,6 +1,6 @@
 == tileset_tooling - Bits of tooling I use for working with tilesets
 
-v0.0.1
+v0.1.0
 
 === Global Options
 === --help
@@ -43,6 +43,33 @@ Gets help for the application or its commands. Can also list the commands in a w
 ===== Options
 ===== -c
 List commands one per line, to assist with shell completion
+
+
+
+==== Command: <tt>tileset </tt>
+Commands relating to tilesets
+
+
+===== Commands
+====== Command: <tt>create </tt>
+Creates a new tileset
+
+
+======= Options
+======= --specs-file arg
+
+Defines the specs file to read instead of asking the user
+
+[Default Value] None
+
+
+======= --[no-]no-new-specs-file
+Do not generate new spec file on tileset creation
+
+
+
+======= --[no-]overwrite
+Overwrites the output file if it already exists
 
 
 

@@ -9,7 +9,7 @@ require 'rubocop/rake_task'
 Rake::RDocTask.new do |rd|
   rd.main = "README.rdoc"
   rd.rdoc_files.include("README.rdoc","lib/**/*.rb","bin/**/*")
-  rd.title = 'Your application title'
+  rd.title = 'TileSet Tooling'
 end
 
 spec = eval(File.read('tileset_tooling.gemspec'))
@@ -22,8 +22,8 @@ CLEAN << CUKE_RESULTS
 
 desc 'Run features'
 Cucumber::Rake::Task.new(:features) do |t|
-  opts = "features --publish-quiet --format html -o #{CUKE_RESULTS} --format progress -x"
-  opts += " --tags #{ENV['TAGS']}" if ENV['TAGS']
+  opts = ["features", "--publish-quiet", "--format", "html", "-o", CUKE_RESULTS, "--format", "progress", "-x"]
+  opts += ["--tags", ENV['TAGS']] if ENV['TAGS']
   t.cucumber_opts =  opts
   t.fork = false
 end
@@ -32,7 +32,7 @@ desc 'Run features tagged as work-in-progress (@wip)'
 Cucumber::Rake::Task.new('features:wip') do |t|
   tag_opts = ' --publish-quiet --tags ~@pending'
   tag_opts = ' --tags @wip'
-  t.cucumber_opts = "features --format html -o #{CUKE_RESULTS} --format pretty -x -s#{tag_opts}"
+  t.cucumber_opts = ["features", "--format", "html", "-o", CUKE_RESULTS, "--format", "pretty", "-x", "-s#{tag_opts}"]
   t.fork = false
 end
 

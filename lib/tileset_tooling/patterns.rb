@@ -7,6 +7,7 @@ end
 
 # Basis for all patterns
 class ::TilesetTooling::Patterns::PatternBase
+  # Base class for all patterns
 end
 
 require 'tileset_tooling/patterns/checkerboard'
@@ -15,10 +16,7 @@ require 'tileset_tooling/patterns/checkerboard'
 class ::TilesetTooling::PatternFactory
   # Initializes a pattern factory with default valid patterns
   def initialize
-    @patterns = [
-      ::TilesetTooling::Patterns::Checkerboard.new(:black, :white),
-      ::TilesetTooling::Patterns::Checkerboard.new(:green, :yellow)
-    ]
+    @patterns = [::TilesetTooling::Patterns::Checkerboard.new(:black, :white), ::TilesetTooling::Patterns::Checkerboard.new(:green, :yellow)]
   end
 
   # Helper to iterate on each valid patterns

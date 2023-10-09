@@ -5,16 +5,7 @@ require 'test_helper'
 
 class ::TestCreateTileset < ::Test::Unit::TestCase
   def specs(nb_rows, nb_columns, pattern, size: 16, margin: 0, offset_top: 0, offset_left: 0)
-    ::TilesetTooling::Data::Specs.new(
-      tile_height: size,
-      tile_width: size,
-      margin: margin,
-      offset_top: offset_top,
-      offset_left: offset_left,
-      nb_rows: nb_rows,
-      nb_columns: nb_columns,
-      pattern: pattern
-    )
+    ::TilesetTooling::Data::Specs.new(tile_height: size, tile_width: size, margin:, offset_top:, offset_left:, nb_rows:, nb_columns:, pattern:)
   end
 
   def test_new_nomargin_nooffset

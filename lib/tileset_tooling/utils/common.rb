@@ -18,10 +18,10 @@ module ::TilesetTooling::Utils
 
   # Generates a virtual tileset with added margin to be used for coordinate
   def tileset_with_margin_from(original_tileset, nb_pixels_in_margin)
-    raise(::StandardError, 'Original tileset already contains a margin') unless original_tileset.margin.zero?
+    raise(::StandardError, 'Original tileset already contains a margin') if original_tileset.margin.nonzero?
 
-    new_height = original_tileset.height + (original_tileset.nb_tiles_per_column * 2 * nb_pixels_in_margin) - 2 * nb_pixels_in_margin
-    new_width = original_tileset.width + (original_tileset.nb_tiles_per_row * 2 * nb_pixels_in_margin) - 2 * nb_pixels_in_margin
+    new_height = original_tileset.height + (original_tileset.nb_tiles_per_column * 2 * nb_pixels_in_margin) - (nb_pixels_in_margin * 2)
+    new_width = original_tileset.width + (original_tileset.nb_tiles_per_row * 2 * nb_pixels_in_margin) - (nb_pixels_in_margin * 2)
 
     ::TilesetTooling::Data::VirtualTileSet.new(
       tile_height: original_tileset.tile_height,

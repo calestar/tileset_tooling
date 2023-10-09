@@ -2,6 +2,9 @@ inherit_mode:
     merge:
       - AllowedNames
 
+require:
+ - rubocop-rake
+
 AllCops:
     EnabledByDefault: true
     Include:
@@ -24,6 +27,9 @@ Metrics/CyclomaticComplexity:
 
 Layout/LineLength:
     Max: 150
+
+Lint/EmptyClass:
+    AllowComments: True
 
 Metrics/MethodLength:
     Max: 50
@@ -61,8 +67,6 @@ Style/MethodCallWithArgsParentheses:
     Exclude:
         - 'features/**/*'
         - 'test/**/*'
-    IgnoredMethods:
-        - require
 
 Style/MissingElse:
     Enabled: False
@@ -73,3 +77,8 @@ Style/Copyright:
 
 Style/ClassAndModuleChildren:
     EnforcedStyle: compact
+
+Style/TopLevelMethodDefinition:
+    Exclude:
+        - 'features/**/*'
+        - 'test/**/*'

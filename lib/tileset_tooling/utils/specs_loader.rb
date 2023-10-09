@@ -83,16 +83,7 @@ class ::TilesetTooling::Utils::SpecsLoader
         end
     end
 
-    ::TilesetTooling::Data::Specs.new(
-      tile_height: tile_height,
-      tile_width: tile_width,
-      margin: margin,
-      offset_top: offset_top,
-      offset_left: offset_left,
-      pattern: pattern,
-      nb_rows: nb_rows,
-      nb_columns: nb_columns
-    )
+    ::TilesetTooling::Data::Specs.new(tile_height:, tile_width:, margin:, offset_top:, offset_left:, pattern:, nb_rows:, nb_columns:)
   end
 
   def load_specs_from_file(file_path)
@@ -116,16 +107,7 @@ class ::TilesetTooling::Utils::SpecsLoader
       raise(::StandardError, 'Invalid specs file')
     end
 
-    ::TilesetTooling::Data::Specs.new(
-      tile_height: tile_height,
-      tile_width: tile_width,
-      margin: margin,
-      offset_top: offset_top,
-      offset_left: offset_left,
-      pattern: pattern,
-      nb_rows: nb_rows,
-      nb_columns: nb_columns
-    )
+    ::TilesetTooling::Data::Specs.new(tile_height:, tile_width:, margin:, offset_top:, offset_left:, pattern:, nb_rows:, nb_columns:)
   end
 
   def save_specs_to_file(specs_file, specs)

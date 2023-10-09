@@ -2,10 +2,11 @@
 # frozen_string_literal: true
 
 require 'test/unit'
+
 require 'mocha/test_unit'
 
-require 'tileset_tooling/app'
 require 'test_assertions'
+require 'tileset_tooling/app'
 
 # In case we need debugging, uncomment the following
 # ::SemanticLogger.sync!
