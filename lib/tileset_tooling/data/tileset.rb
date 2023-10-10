@@ -72,12 +72,12 @@ class ::TilesetTooling::Data::TileSetBase < ::Dry::Struct
           tile_left: left + margin_left,
           height: tile_height,
           width: tile_width,
-          margin_top: margin_top,
-          margin_left: margin_left,
-          margin_bottom: margin_bottom,
-          margin_right: margin_right,
-          row_index: row_index,
-          column_index: column_index
+          margin_top:,
+          margin_left:,
+          margin_bottom:,
+          margin_right:,
+          row_index:,
+          column_index:
         )
         left += tile_width + margin_left + margin_right
         column_index += 1
@@ -99,6 +99,7 @@ class ::TilesetTooling::Data::FileTileSet < ::TilesetTooling::Data::TileSetBase
   attribute :image, ::TilesetTooling::Data::Types::ImageType
   attribute :original_image_path, ::TilesetTooling::Data::Types::String
 
+  # Default constructor, expects an image (kwargs)
   def self.new(**kwargs)
     image = kwargs[:image]
     kwargs[:image] = image
@@ -119,12 +120,13 @@ class ::TilesetTooling::Data::NewTileSet < ::TilesetTooling::Data::TileSetBase
   attribute :nb_columns, ::TilesetTooling::Data::Types::Integer
   attribute :pattern, ::TilesetTooling::Data::Types::PatternType
 
+  # Default constructor, expects: nb_rows, nb_columns, margin, offset_top, offset_left, tile_height, tile_width and pattern (all as kwargs)
   def self.new(**kwargs)
     @nb_rows = kwargs[:nb_rows]
     @nb_columns = kwargs[:nb_columns]
     @pattern = kwargs[:pattern]
-    kwargs[:height] = @nb_rows * kwargs[:tile_height] + (@nb_rows - 1) * (2 * kwargs[:margin]) + kwargs[:offset_top]
-    kwargs[:width] = @nb_columns * kwargs[:tile_width] + (@nb_columns - 1) * (2 * kwargs[:margin]) + kwargs[:offset_left]
+    kwargs[:height] = (@nb_rows * kwargs[:tile_height]) + ((@nb_rows - 1) * (kwargs[:margin] * 2)) + kwargs[:offset_top]
+    kwargs[:width] = (@nb_columns * kwargs[:tile_width]) + ((@nb_columns - 1) * (kwargs[:margin] * 2)) + kwargs[:offset_left]
 
     super(**kwargs)
   end

@@ -5,9 +5,9 @@ require 'gli'
 require 'mini_magick'
 require 'semantic_logger'
 
-require 'tileset_tooling/version'
 require 'tileset_tooling/commands'
 require 'tileset_tooling/utils'
+require 'tileset_tooling/version'
 
 # Core module for the project
 module ::TilesetTooling
@@ -35,6 +35,7 @@ class ::TilesetTooling::App
   end
 
   post do
+    # Keeping for later if needed
   end
 
   on_error do |error|
@@ -65,16 +66,8 @@ class ::TilesetTooling::App
     tileset_command.desc('Creates a new tileset')
     tileset_command.command(:create) do |create_command|
       create_command.switch([:overwrite], default_value: false, desc: 'Overwrites the output file if it already exists')
-      create_command.flag(
-        [:'specs-file'],
-        default_value: nil,
-        desc: 'Defines the specs file to read instead of asking the user'
-      )
-      create_command.switch(
-        [:'no-new-specs-file'],
-        default_value: false,
-        desc: 'Do not generate new spec file on tileset creation'
-      )
+      create_command.flag([:'specs-file'], default_value: nil, desc: 'Defines the specs file to read instead of asking the user')
+      create_command.switch([:'no-new-specs-file'], default_value: false, desc: 'Do not generate new spec file on tileset creation')
       create_command.action do |_, options, args|
         specs_loader = ::TilesetTooling::Utils::SpecsLoader.new(for_new_image: true)
         command = ::TilesetTooling::Commands::CreateTileset.new(options, args, specs_loader)
